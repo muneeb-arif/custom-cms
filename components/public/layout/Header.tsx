@@ -35,7 +35,7 @@ export default function Header({
               <img
                 src={brand.logoUrl}
                 alt="Logo"
-                className="h-10 w-auto max-w-[200px] object-contain"
+                className="h-12 w-auto max-w-[500px] object-contain"
               />
             ) : (
               brand.text

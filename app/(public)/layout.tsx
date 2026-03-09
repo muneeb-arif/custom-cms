@@ -60,7 +60,7 @@ export default async function PublicLayout({
       ? { type: "logo" as const, logoUrl: settings.headerLogoUrl }
       : {
           type: "text" as const,
-          text: settings.headerBrandText?.trim() || "CMS",
+          text: settings.headerBrandText?.trim() || "InforMityx",
         }
 
   return (
