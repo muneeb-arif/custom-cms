@@ -1,9 +1,10 @@
 import Link from "next/link"
 import { prisma } from "@/lib/db/prisma"
 import SectionRenderer from "@/components/public/sections/SectionRenderer"
+import PageBanner from "@/components/public/PageBanner"
 import type { Metadata } from "next"
 import { getOrCreateSettings } from "@/lib/db/settings"
-import type { SectionData } from "@/types/cms"
+import type { SectionData, PageData } from "@/types/cms"
 
 export const revalidate = 60
 
@@ -46,18 +47,40 @@ export default async function HomePage() {
     })
 
     if (page && page.isPublished) {
+      const p = page as PageData
+      const showBanner =
+        p.bannerTitle ||
+        p.bannerText ||
+        p.bannerBackgroundImage ||
+        p.bannerImage ||
+        (p.bannerButtonVisible && p.bannerButtonText)
       return (
-        <div className="container mx-auto px-4 py-8">
-          <h1 className="text-4xl font-bold mb-8">{page.title}</h1>
-          <div className="space-y-12">
-            {page.sections.map((section) => (
-              <SectionRenderer
-                key={section.id}
-                section={section as SectionData}
-              />
-            ))}
+        <>
+          <PageBanner
+            bannerBackgroundImage={p.bannerBackgroundImage}
+            bannerOverlayColor={p.bannerOverlayColor}
+            bannerOverlayOpacity={p.bannerOverlayOpacity}
+            bannerTitle={p.bannerTitle}
+            bannerText={p.bannerText}
+            bannerButtonText={p.bannerButtonText}
+            bannerButtonLink={p.bannerButtonLink}
+            bannerButtonVisible={p.bannerButtonVisible}
+            bannerImage={p.bannerImage}
+          />
+          <div className="container mx-auto px-4 py-8">
+            {!showBanner && (
+              <h1 className="text-4xl font-bold mb-8">{p.title}</h1>
+            )}
+            <div className="space-y-12">
+              {page.sections.map((section) => (
+                <SectionRenderer
+                  key={section.id}
+                  section={section as SectionData}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        </>
       )
     }
   }

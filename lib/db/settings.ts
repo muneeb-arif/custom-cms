@@ -1,13 +1,12 @@
+// lib/db/settings.ts
 import { prisma } from "@/lib/db/prisma"
 
 const SITE_SETTINGS_ID = "default"
 
 export async function getOrCreateSettings() {
-  const existing = await prisma.siteSettings.findUnique({
+  return prisma.siteSettings.upsert({
     where: { id: SITE_SETTINGS_ID },
-  })
-  if (existing) return existing
-  return prisma.siteSettings.create({
-    data: { id: SITE_SETTINGS_ID },
+    create: { id: SITE_SETTINGS_ID },
+    update: {},
   })
 }

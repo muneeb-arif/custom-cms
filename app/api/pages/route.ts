@@ -9,6 +9,15 @@ const pageSchema = z.object({
   metaTitle: z.string().optional(),
   metaDescription: z.string().optional(),
   isPublished: z.boolean().optional(),
+  bannerBackgroundImage: z.string().optional().nullable(),
+  bannerOverlayColor: z.string().optional().nullable(),
+  bannerOverlayOpacity: z.number().min(0).max(1).optional().nullable(),
+  bannerTitle: z.string().optional().nullable(),
+  bannerText: z.string().optional().nullable(),
+  bannerButtonText: z.string().optional().nullable(),
+  bannerButtonLink: z.string().optional().nullable(),
+  bannerButtonVisible: z.boolean().optional().nullable(),
+  bannerImage: z.string().optional().nullable(),
 })
 
 export async function GET(request: NextRequest) {

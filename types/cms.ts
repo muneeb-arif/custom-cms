@@ -7,6 +7,15 @@ export interface PageData {
   metaTitle?: string | null
   metaDescription?: string | null
   isPublished: boolean
+  bannerBackgroundImage?: string | null
+  bannerOverlayColor?: string | null
+  bannerOverlayOpacity?: number | null
+  bannerTitle?: string | null
+  bannerText?: string | null
+  bannerButtonText?: string | null
+  bannerButtonLink?: string | null
+  bannerButtonVisible?: boolean | null
+  bannerImage?: string | null
   sections: SectionData[]
   createdAt: Date
   updatedAt: Date

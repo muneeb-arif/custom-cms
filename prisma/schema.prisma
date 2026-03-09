@@ -41,16 +41,25 @@ model SiteSettings {
 
 // Dynamic pages
 model Page {
-  id              String    @id @default(cuid())
-  slug            String    @unique
-  title           String
-  metaTitle       String?
-  metaDescription String?
-  isPublished     Boolean   @default(false)
-  sections        Section[]
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  siteSettingsAsHome SiteSettings?
+  id                     String    @id @default(cuid())
+  slug                   String    @unique
+  title                  String
+  metaTitle              String?
+  metaDescription        String?
+  isPublished            Boolean   @default(false)
+  bannerBackgroundImage  String?
+  bannerOverlayColor     String?
+  bannerOverlayOpacity   Float?
+  bannerTitle            String?
+  bannerText             String?
+  bannerButtonText       String?
+  bannerButtonLink       String?
+  bannerButtonVisible    Boolean?
+  bannerImage            String?
+  sections               Section[]
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+  siteSettingsAsHome     SiteSettings?
 }
 
 // Flexible sections system

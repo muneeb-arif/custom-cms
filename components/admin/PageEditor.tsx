@@ -14,12 +14,24 @@ interface PageEditorProps {
 export default function PageEditor({ page, homePageId = null }: PageEditorProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [uploadingBannerBg, setUploadingBannerBg] = useState(false)
+  const [uploadingBannerImage, setUploadingBannerImage] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     slug: page?.slug || "",
     title: page?.title || "",
     metaTitle: page?.metaTitle || "",
     metaDescription: page?.metaDescription || "",
     isPublished: page?.isPublished || false,
+    bannerBackgroundImage: page?.bannerBackgroundImage ?? "",
+    bannerOverlayColor: page?.bannerOverlayColor ?? "#ffffff",
+    bannerOverlayOpacity: page?.bannerOverlayOpacity ?? 0.8,
+    bannerTitle: page?.bannerTitle ?? "",
+    bannerText: page?.bannerText ?? "",
+    bannerButtonText: page?.bannerButtonText ?? "",
+    bannerButtonLink: page?.bannerButtonLink ?? "",
+    bannerButtonVisible: page?.bannerButtonVisible ?? true,
+    bannerImage: page?.bannerImage ?? "",
   })
   const [sections, setSections] = useState<SectionData[]>(page?.sections || [])
 
@@ -40,6 +52,52 @@ export default function PageEditor({ page, homePageId = null }: PageEditorProps)
     }
   }
 
+  const handleBannerBackgroundUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploadError(null)
+    setUploadingBannerBg(true)
+    try {
+      const fd = new FormData()
+      fd.set("file", file)
+      fd.set("prefix", "page-banner")
+      const res = await fetch("/api/upload", { method: "POST", body: fd })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.error || "Upload failed")
+      if (data.url) setFormData((prev) => ({ ...prev, bannerBackgroundImage: data.url }))
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Upload failed")
+    } finally {
+      setUploadingBannerBg(false)
+      e.target.value = ""
+    }
+  }
+
+  const handleBannerImageUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploadError(null)
+    setUploadingBannerImage(true)
+    try {
+      const fd = new FormData()
+      fd.set("file", file)
+      fd.set("prefix", "page-banner-image")
+      const res = await fetch("/api/upload", { method: "POST", body: fd })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.error || "Upload failed")
+      if (data.url) setFormData((prev) => ({ ...prev, bannerImage: data.url }))
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Upload failed")
+    } finally {
+      setUploadingBannerImage(false)
+      e.target.value = ""
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -47,11 +105,21 @@ export default function PageEditor({ page, homePageId = null }: PageEditorProps)
     try {
       const url = page ? `/api/pages/${page.id}` : "/api/pages"
       const method = page ? "PUT" : "POST"
+      const payload = {
+        ...formData,
+        bannerBackgroundImage: formData.bannerBackgroundImage || null,
+        bannerOverlayColor: formData.bannerOverlayColor || null,
+        bannerTitle: formData.bannerTitle || null,
+        bannerText: formData.bannerText || null,
+        bannerButtonText: formData.bannerButtonText || null,
+        bannerButtonLink: formData.bannerButtonLink || null,
+        bannerImage: formData.bannerImage || null,
+      }
 
       const response = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       })
 
       if (!response.ok) throw new Error("Failed to save page")
@@ -183,6 +251,192 @@ export default function PageEditor({ page, homePageId = null }: PageEditorProps)
             rows={3}
           />
         </div>
+
+        <div className="border-t border-gray-200 pt-6 space-y-4">
+          <h2 className="text-lg font-semibold text-gray-900">Page banner</h2>
+          <div>
+            <label className="block text-sm font-medium mb-2 text-gray-700">
+              Top banner (background image)
+            </label>
+            <div className="flex items-center gap-2 flex-wrap">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleBannerBackgroundUpload}
+                disabled={uploadingBannerBg}
+                className="text-sm text-gray-600"
+              />
+              <input
+                type="url"
+                value={formData.bannerBackgroundImage}
+                onChange={(e) =>
+                  setFormData({ ...formData, bannerBackgroundImage: e.target.value })
+                }
+                placeholder="Or paste image URL"
+                className="flex-1 min-w-[200px] px-4 py-2 border border-gray-300 rounded-lg text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            {uploadingBannerBg && (
+              <p className="text-xs text-gray-500 mt-1">Uploading…</p>
+            )}
+            {formData.bannerBackgroundImage && (
+              <p className="text-xs text-gray-500 mt-1 truncate max-w-full">
+                Current: {formData.bannerBackgroundImage}
+              </p>
+            )}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700">
+                Banner overlay color
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="color"
+                  value={formData.bannerOverlayColor}
+                  onChange={(e) =>
+                    setFormData({ ...formData, bannerOverlayColor: e.target.value })
+                  }
+                  className="h-10 w-14 rounded border border-gray-300 cursor-pointer"
+                />
+                <input
+                  type="text"
+                  value={formData.bannerOverlayColor}
+                  onChange={(e) =>
+                    setFormData({ ...formData, bannerOverlayColor: e.target.value })
+                  }
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="#ffffff"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700">
+                Overlay transparency (0–1)
+              </label>
+              <input
+                type="number"
+                min={0}
+                max={1}
+                step={0.05}
+                value={formData.bannerOverlayOpacity}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    bannerOverlayOpacity: Number(e.target.value) || 0,
+                  })
+                }
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2 text-gray-700">
+              Banner title
+            </label>
+            <input
+              type="text"
+              value={formData.bannerTitle}
+              onChange={(e) =>
+                setFormData({ ...formData, bannerTitle: e.target.value })
+              }
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="e.g. InforMityx"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2 text-gray-700">
+              Banner text
+            </label>
+            <textarea
+              value={formData.bannerText}
+              onChange={(e) =>
+                setFormData({ ...formData, bannerText: e.target.value })
+              }
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              rows={2}
+              placeholder="e.g. Building modern web applications..."
+            />
+          </div>
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-gray-700">Custom banner button</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs text-gray-600 mb-1">Button text</label>
+                <input
+                  type="text"
+                  value={formData.bannerButtonText}
+                  onChange={(e) =>
+                    setFormData({ ...formData, bannerButtonText: e.target.value })
+                  }
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Let's get started"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-gray-600 mb-1">Button link</label>
+                <input
+                  type="text"
+                  value={formData.bannerButtonLink}
+                  onChange={(e) =>
+                    setFormData({ ...formData, bannerButtonLink: e.target.value })
+                  }
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="/contact"
+                />
+              </div>
+            </div>
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="bannerButtonVisible"
+                checked={formData.bannerButtonVisible}
+                onChange={(e) =>
+                  setFormData({ ...formData, bannerButtonVisible: e.target.checked })
+                }
+                className="mr-2"
+              />
+              <label htmlFor="bannerButtonVisible" className="text-gray-700 text-sm">
+                Button visible
+              </label>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2 text-gray-700">
+              Image on the banner (circular)
+            </label>
+            <div className="flex items-center gap-2 flex-wrap">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleBannerImageUpload}
+                disabled={uploadingBannerImage}
+                className="text-sm text-gray-600"
+              />
+              <input
+                type="url"
+                value={formData.bannerImage}
+                onChange={(e) =>
+                  setFormData({ ...formData, bannerImage: e.target.value })
+                }
+                placeholder="Or paste image URL"
+                className="flex-1 min-w-[200px] px-4 py-2 border border-gray-300 rounded-lg text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            {uploadingBannerImage && (
+              <p className="text-xs text-gray-500 mt-1">Uploading…</p>
+            )}
+            {uploadError && (
+              <p className="text-xs text-red-600 mt-1">{uploadError}</p>
+            )}
+            {formData.bannerImage && (
+              <p className="text-xs text-gray-500 mt-1 truncate max-w-full">
+                Current: {formData.bannerImage}
+              </p>
+            )}
+          </div>
+        </div>
+
         <div className="flex items-center">
           <input
             type="checkbox"
