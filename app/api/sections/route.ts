@@ -40,7 +40,10 @@ export async function POST(request: NextRequest) {
     const data = sectionSchema.parse(body)
 
     const section = await prisma.section.create({
-      data,
+      data: {
+        ...data,
+        content: (data.content ?? {}) as object,
+      },
     })
 
     return NextResponse.json(section, { status: 201 })

@@ -21,6 +21,18 @@ model User {
   updatedAt     DateTime @updatedAt
 }
 
+// Site-wide settings (singleton)
+model SiteSettings {
+  id                   String   @id @default("default")
+  homePageId           String?   @unique
+  footerAboutVisible   Boolean  @default(true)
+  footerMenuVisible    Boolean  @default(true)
+  footerSocialVisible  Boolean  @default(true)
+  footerSubscribeVisible Boolean @default(true)
+  updatedAt            DateTime @updatedAt
+  homePage             Page?    @relation(fields: [homePageId], references: [id], onDelete: SetNull)
+}
+
 // Dynamic pages
 model Page {
   id              String    @id @default(cuid())
@@ -32,6 +44,7 @@ model Page {
   sections        Section[]
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+  siteSettingsAsHome SiteSettings?
 }
 
 // Flexible sections system

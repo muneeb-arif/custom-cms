@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import { prisma } from "@/lib/db/prisma"
 import SectionRenderer from "@/components/public/sections/SectionRenderer"
 import type { Metadata } from "next"
+import type { SectionData } from "@/types/cms"
 
 interface DynamicPageProps {
   params: Promise<{ slug: string[] }>
@@ -35,8 +36,8 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
   const { slug } = await params
   const slugString = slug.join("/")
 
-  // Skip if it's a known static route
-  const staticRoutes = ["home", "about", "contact", "services"]
+  // Skip if it's a reserved route (services list is at /services)
+  const staticRoutes = ["services"]
   if (staticRoutes.includes(slugString)) {
     notFound()
   }
@@ -59,9 +60,12 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-8">{page.title}</h1>
       <div className="space-y-12">
-        {page.sections.map((section) => (
-          <SectionRenderer key={section.id} section={section} />
-        ))}
+          {page.sections.map((section) => (
+            <SectionRenderer
+              key={section.id}
+              section={section as SectionData}
+            />
+          ))}
       </div>
     </div>
   )

@@ -60,3 +60,13 @@ export interface ServiceData {
   createdAt: Date
   updatedAt: Date
 }
+
+export interface SiteSettingsData {
+  id: string
+  homePageId: string | null
+  footerAboutVisible: boolean
+  footerMenuVisible: boolean
+  footerSocialVisible: boolean
+  footerSubscribeVisible: boolean
+  updatedAt: Date
+}

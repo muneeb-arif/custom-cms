@@ -1,15 +1,25 @@
 import Link from "next/link"
 import { prisma } from "@/lib/db/prisma"
+import SetHomePageButton from "@/components/admin/SetHomePageButton"
+import { getOrCreateSettings } from "@/lib/db/settings"
+
+type PageRow = Awaited<
+  ReturnType<typeof prisma.page.findMany<{ include: { _count: { select: { sections: true } } } }>>
+>[number]
 
 export default async function PagesPage() {
-  const pages = await prisma.page.findMany({
-    orderBy: { updatedAt: "desc" },
-    include: {
-      _count: {
-        select: { sections: true },
+  const [pages, settings] = await Promise.all([
+    prisma.page.findMany({
+      orderBy: { updatedAt: "desc" },
+      include: {
+        _count: {
+          select: { sections: true },
+        },
       },
-    },
-  })
+    }),
+    getOrCreateSettings(),
+  ])
+  const homePageId = settings.homePageId ?? null
 
   return (
     <div className="p-8">
@@ -39,12 +49,15 @@ export default async function PagesPage() {
                 Status
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Home
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                 Actions
               </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {pages.map((page) => (
+            {pages.map((page: PageRow) => (
               <tr key={page.id}>
                 <td className="px-6 py-4 whitespace-nowrap text-gray-900">{page.title}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-gray-500">
@@ -63,6 +76,13 @@ export default async function PagesPage() {
                   >
                     {page.isPublished ? "Published" : "Draft"}
                   </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <SetHomePageButton
+                    pageId={page.id}
+                    isCurrentHome={page.id === homePageId}
+                    variant="button"
+                  />
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <Link

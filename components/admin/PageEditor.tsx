@@ -4,12 +4,14 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { PageData, SectionData } from "@/types/cms"
 import SectionEditor from "./SectionEditor"
+import SetHomePageButton from "./SetHomePageButton"
 
 interface PageEditorProps {
   page?: PageData
+  homePageId?: string | null
 }
 
-export default function PageEditor({ page }: PageEditorProps) {
+export default function PageEditor({ page, homePageId = null }: PageEditorProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -191,8 +193,20 @@ export default function PageEditor({ page }: PageEditorProps) {
             }
             className="mr-2"
           />
-          <label htmlFor="isPublished" className="text-gray-700">Published</label>
+          <label htmlFor="isPublished" className="text-gray-700">
+            Appear in menu (publish to show this page in the header)
+          </label>
         </div>
+        {page && (
+          <div className="flex items-center gap-2">
+            <span className="text-gray-700 text-sm">Home page:</span>
+            <SetHomePageButton
+              pageId={page.id}
+              isCurrentHome={page.id === homePageId}
+              variant="button"
+            />
+          </div>
+        )}
         <button
           type="submit"
           disabled={loading}

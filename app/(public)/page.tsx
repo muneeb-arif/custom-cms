@@ -1,21 +1,29 @@
+import Link from "next/link"
 import { prisma } from "@/lib/db/prisma"
 import SectionRenderer from "@/components/public/sections/SectionRenderer"
 import type { Metadata } from "next"
+import { getOrCreateSettings } from "@/lib/db/settings"
+import type { SectionData } from "@/types/cms"
 
-export const revalidate = 60 // Revalidate every 60 seconds
+export const revalidate = 60
 
 export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getOrCreateSettings()
+  if (!settings.homePageId) {
+    return {
+      title: "Home",
+      description: "Welcome to our CMS",
+    }
+  }
   const page = await prisma.page.findUnique({
-    where: { slug: "home" },
+    where: { id: settings.homePageId },
   })
-
   if (page && page.isPublished) {
     return {
       title: page.metaTitle || page.title,
       description: page.metaDescription || undefined,
     }
   }
-
   return {
     title: "Home",
     description: "Welcome to our CMS",
@@ -23,59 +31,53 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  // Try to fetch the home page from database
-  const page = await prisma.page.findUnique({
-    where: { slug: "home" },
-    include: {
-      sections: {
-        where: { isVisible: true },
-        orderBy: { order: "asc" },
-      },
-    },
-  })
+  const settings = await getOrCreateSettings()
+  const homePageId = settings.homePageId
 
-  // If page exists in DB, render it dynamically
-  if (page && page.isPublished) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold mb-8">{page.title}</h1>
-        <div className="space-y-12">
-          {page.sections.map((section) => (
-            <SectionRenderer key={section.id} section={section} />
-          ))}
+  if (homePageId) {
+    const page = await prisma.page.findUnique({
+      where: { id: homePageId },
+      include: {
+        sections: {
+          where: { isVisible: true },
+          orderBy: { order: "asc" },
+        },
+      },
+    })
+
+    if (page && page.isPublished) {
+      return (
+        <div className="container mx-auto px-4 py-8">
+          <h1 className="text-4xl font-bold mb-8">{page.title}</h1>
+          <div className="space-y-12">
+            {page.sections.map((section) => (
+              <SectionRenderer
+                key={section.id}
+                section={section as SectionData}
+              />
+            ))}
+          </div>
         </div>
-      </div>
-    )
+      )
+    }
   }
 
-  // Default static home page
   return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="text-center">
-        <h1 className="text-5xl font-bold mb-4">Welcome to Our CMS</h1>
-        <p className="text-xl text-gray-600 mb-8">
-          A modern content management system built with Next.js
+    <div className="container mx-auto px-4 py-24">
+      <div className="text-center max-w-lg mx-auto">
+        <h1 className="text-4xl font-bold mb-4 text-gray-900">
+          Nothing is created
+        </h1>
+        <p className="text-lg text-gray-600 mb-8">
+          Let&apos;s start building your site. Create your first page and set it
+          as the home page from the admin.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-          <div className="p-6 border rounded-lg">
-            <h2 className="text-2xl font-semibold mb-4">Dynamic Pages</h2>
-            <p className="text-gray-600">
-              Create and manage pages with flexible sections
-            </p>
-          </div>
-          <div className="p-6 border rounded-lg">
-            <h2 className="text-2xl font-semibold mb-4">Rich Content</h2>
-            <p className="text-gray-600">
-              Add text, images, sliders, and more to your pages
-            </p>
-          </div>
-          <div className="p-6 border rounded-lg">
-            <h2 className="text-2xl font-semibold mb-4">SEO Friendly</h2>
-            <p className="text-gray-600">
-              Built for search engine optimization
-            </p>
-          </div>
-        </div>
+        <Link
+          href="/admin"
+          className="inline-block px-6 py-3 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 transition-colors"
+        >
+          Let&apos;s start building
+        </Link>
       </div>
     </div>
   )
