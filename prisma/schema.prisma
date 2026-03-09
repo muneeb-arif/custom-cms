@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User authentication
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  password      String   // Hashed with bcrypt
+  name          String?
+  role          String   @default("admin")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// Dynamic pages
+model Page {
+  id              String    @id @default(cuid())
+  slug            String    @unique
+  title           String
+  metaTitle       String?
+  metaDescription String?
+  isPublished     Boolean   @default(false)
+  sections        Section[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+// Flexible sections system
+model Section {
+  id            String   @id @default(cuid())
+  pageId        String
+  page          Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  type          String   // "textImage", "imageSlider", "headingParagraph", etc.
+  order         Int      @default(0)
+  content       Json     // Flexible JSON for section-specific data
+  isVisible     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@index([pageId, order])
+}
+
+// Services
+model Service {
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  title           String
+  description     String?  @db.Text
+  shortDescription String?
+  image           String?
+  content         Json?    // Rich content sections
+  isPublished     Boolean  @default(false)
+  order           Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
