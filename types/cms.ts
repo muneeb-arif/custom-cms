@@ -16,6 +16,7 @@ export interface PageData {
   bannerButtonLink?: string | null
   bannerButtonVisible?: boolean | null
   bannerImage?: string | null
+  bannerHeightPercent?: number | null
   sections: SectionData[]
   createdAt: Date
   updatedAt: Date

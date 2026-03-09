@@ -66,6 +66,7 @@ export default async function HomePage() {
             bannerButtonLink={p.bannerButtonLink}
             bannerButtonVisible={p.bannerButtonVisible}
             bannerImage={p.bannerImage}
+            bannerHeightPercent={p.bannerHeightPercent}
           />
           <div className="container mx-auto px-4 py-8">
             {!showBanner && (

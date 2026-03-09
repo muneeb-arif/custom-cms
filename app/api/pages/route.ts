@@ -18,6 +18,7 @@ const pageSchema = z.object({
   bannerButtonLink: z.string().optional().nullable(),
   bannerButtonVisible: z.boolean().optional().nullable(),
   bannerImage: z.string().optional().nullable(),
+  bannerHeightPercent: z.number().min(0).max(100).optional().nullable(),
 })
 
 export async function GET(request: NextRequest) {

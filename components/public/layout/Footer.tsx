@@ -311,7 +311,7 @@ export default function Footer({
           </div>
         )}
         <div className="text-center text-gray-600 border-t pt-6">
-          <p>&copy; {new Date().getFullYear()} CMS. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} InforMityx. All rights reserved.</p>
         </div>
       </div>
     </footer>

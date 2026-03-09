@@ -10,6 +10,7 @@ export interface PageBannerProps {
   bannerButtonLink?: string | null
   bannerButtonVisible?: boolean | null
   bannerImage?: string | null
+  bannerHeightPercent?: number | null
 }
 
 function hexToRgba(hex: string, alpha: number): string {
@@ -29,6 +30,7 @@ export default function PageBanner({
   bannerButtonLink,
   bannerButtonVisible,
   bannerImage,
+  bannerHeightPercent,
 }: PageBannerProps) {
   const hasOverlayContent =
     bannerTitle ||
@@ -44,17 +46,18 @@ export default function PageBanner({
   const overlayStyle = {
     backgroundColor: hexToRgba(overlayColor, overlayOpacity),
   }
+  const heightPercent = bannerHeightPercent ?? 60
+  const sectionStyle: React.CSSProperties = {
+    minHeight: `${heightPercent}vh`,
+    ...(bannerBackgroundImage
+      ? { backgroundImage: `url(${bannerBackgroundImage})` }
+      : {}),
+  }
 
   return (
     <section
-      className="relative w-full min-h-[400px] md:min-h-[500px] flex items-center justify-center bg-cover bg-center bg-no-repeat bg-gray-200"
-      style={
-        bannerBackgroundImage
-          ? {
-              backgroundImage: `url(${bannerBackgroundImage})`,
-            }
-          : undefined
-      }
+      className="relative w-full flex items-center justify-center bg-cover bg-center bg-no-repeat bg-gray-200"
+      style={sectionStyle}
     >
       <div className="container mx-auto px-4 py-12 md:py-16">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">

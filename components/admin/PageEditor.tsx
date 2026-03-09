@@ -32,6 +32,7 @@ export default function PageEditor({ page, homePageId = null }: PageEditorProps)
     bannerButtonLink: page?.bannerButtonLink ?? "",
     bannerButtonVisible: page?.bannerButtonVisible ?? true,
     bannerImage: page?.bannerImage ?? "",
+    bannerHeightPercent: page?.bannerHeightPercent ?? 60,
   })
   const [sections, setSections] = useState<SectionData[]>(page?.sections || [])
 
@@ -114,6 +115,7 @@ export default function PageEditor({ page, homePageId = null }: PageEditorProps)
         bannerButtonText: formData.bannerButtonText || null,
         bannerButtonLink: formData.bannerButtonLink || null,
         bannerImage: formData.bannerImage || null,
+        bannerHeightPercent: formData.bannerHeightPercent ?? null,
       }
 
       const response = await fetch(url, {
@@ -254,10 +256,31 @@ export default function PageEditor({ page, homePageId = null }: PageEditorProps)
 
         <div className="border-t border-gray-200 pt-6 space-y-4">
           <h2 className="text-lg font-semibold text-gray-900">Page banner</h2>
-          <div>
-            <label className="block text-sm font-medium mb-2 text-gray-700">
-              Top banner (background image)
-            </label>
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700">
+                Banner height (% of viewport)
+              </label>
+              <input
+                type="number"
+                min={20}
+                max={100}
+                value={formData.bannerHeightPercent ?? 60}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    bannerHeightPercent: Number(e.target.value) || 60,
+                  })
+                }
+                className="w-full max-w-[120px] px-4 py-2 border border-gray-300 rounded-lg text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Height as % of viewport (e.g. 60 = 60vh). Default 60.
+              </p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700">
+                Top banner (background image)
+              </label>
             <div className="flex items-center gap-2 flex-wrap">
               <input
                 type="file"
