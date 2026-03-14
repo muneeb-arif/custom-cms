@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import ImagePicker from "./ImagePicker"
 
 export type HeaderBrandType = "text" | "logo"
 
@@ -23,36 +24,6 @@ export default function HeaderSettingsForm({
   const [brandText, setBrandText] = useState(initialBrandText ?? "InforMityx")
   const [logoUrl, setLogoUrl] = useState(initialLogoUrl ?? "")
   const [saving, setSaving] = useState(false)
-  const [uploading, setUploading] = useState(false)
-  const [uploadError, setUploadError] = useState<string | null>(null)
-
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    setUploadError(null)
-    setUploading(true)
-    try {
-      const formData = new FormData()
-      formData.set("file", file)
-      formData.set("prefix", "header")
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      })
-      const data = await res.json().catch(() => ({}))
-      if (!res.ok) {
-        throw new Error(data.error || "Upload failed")
-      }
-      if (data.url) {
-        setLogoUrl(data.url)
-      }
-    } catch (err) {
-      setUploadError(err instanceof Error ? err.message : "Upload failed")
-    } finally {
-      setUploading(false)
-      e.target.value = ""
-    }
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -135,62 +106,12 @@ export default function HeaderSettingsForm({
           )}
 
           {brandType === "logo" && (
-            <div className="space-y-3">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Upload logo image
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileUpload}
-                  disabled={uploading}
-                  className="block w-full text-sm text-gray-600 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 file:font-medium file:cursor-pointer hover:file:bg-blue-100"
-                />
-                {uploading && (
-                  <p className="text-xs text-gray-500 mt-1">Uploading…</p>
-                )}
-                {uploadError && (
-                  <p className="text-xs text-red-600 mt-1">{uploadError}</p>
-                )}
-              </div>
-              <div>
-                <label
-                  htmlFor="headerLogoUrl"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Or paste logo image URL
-                </label>
-                <input
-                  id="headerLogoUrl"
-                  type="url"
-                  value={logoUrl}
-                  onChange={(e) => {
-                    setLogoUrl(e.target.value)
-                    setUploadError(null)
-                  }}
-                  placeholder="https://example.com/logo.png"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                />
-              </div>
-              {logoUrl && (
-                <div className="pt-2">
-                  <p className="text-xs font-medium text-gray-700 mb-1">
-                    Current logo
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={logoUrl}
-                      alt="Logo preview"
-                      className="h-10 w-auto max-w-[200px] object-contain border border-gray-200 rounded"
-                    />
-                    <span className="text-xs text-gray-500 truncate max-w-[200px]" title={logoUrl}>
-                      {logoUrl}
-                    </span>
-                  </div>
-                </div>
-              )}
-            </div>
+            <ImagePicker
+              value={logoUrl}
+              onChange={setLogoUrl}
+              label="Logo image"
+              prefix="header"
+            />
           )}
         </div>
 

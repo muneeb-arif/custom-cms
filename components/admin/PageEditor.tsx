@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { PageData, SectionData } from "@/types/cms"
 import SectionEditor from "./SectionEditor"
 import SetHomePageButton from "./SetHomePageButton"
+import ImagePicker from "./ImagePicker"
 
 interface PageEditorProps {
   page?: PageData
@@ -14,9 +15,6 @@ interface PageEditorProps {
 export default function PageEditor({ page, homePageId = null }: PageEditorProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const [uploadingBannerBg, setUploadingBannerBg] = useState(false)
-  const [uploadingBannerImage, setUploadingBannerImage] = useState(false)
-  const [uploadError, setUploadError] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     slug: page?.slug || "",
     title: page?.title || "",
@@ -50,52 +48,6 @@ export default function PageEditor({ page, homePageId = null }: PageEditorProps)
       setSections(data)
     } catch (error) {
       console.error("Failed to load sections:", error)
-    }
-  }
-
-  const handleBannerBackgroundUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    setUploadError(null)
-    setUploadingBannerBg(true)
-    try {
-      const fd = new FormData()
-      fd.set("file", file)
-      fd.set("prefix", "page-banner")
-      const res = await fetch("/api/upload", { method: "POST", body: fd })
-      const data = await res.json().catch(() => ({}))
-      if (!res.ok) throw new Error(data.error || "Upload failed")
-      if (data.url) setFormData((prev) => ({ ...prev, bannerBackgroundImage: data.url }))
-    } catch (err) {
-      setUploadError(err instanceof Error ? err.message : "Upload failed")
-    } finally {
-      setUploadingBannerBg(false)
-      e.target.value = ""
-    }
-  }
-
-  const handleBannerImageUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    setUploadError(null)
-    setUploadingBannerImage(true)
-    try {
-      const fd = new FormData()
-      fd.set("file", file)
-      fd.set("prefix", "page-banner-image")
-      const res = await fetch("/api/upload", { method: "POST", body: fd })
-      const data = await res.json().catch(() => ({}))
-      if (!res.ok) throw new Error(data.error || "Upload failed")
-      if (data.url) setFormData((prev) => ({ ...prev, bannerImage: data.url }))
-    } catch (err) {
-      setUploadError(err instanceof Error ? err.message : "Upload failed")
-    } finally {
-      setUploadingBannerImage(false)
-      e.target.value = ""
     }
   }
 
@@ -174,6 +126,8 @@ export default function PageEditor({ page, homePageId = null }: PageEditorProps)
         return { images: [], autoplay: false }
       case "headingParagraph":
         return { heading: "", paragraphs: [""] }
+      case "cards":
+        return { title: "", subText: "", cardsPerRow: 3, cards: [] }
       default:
         return {}
     }
@@ -254,7 +208,7 @@ export default function PageEditor({ page, homePageId = null }: PageEditorProps)
           />
         </div>
 
-        <div className="border-t border-gray-200 pt-6 space-y-4">
+        <div className="border-t border-gray-200 pt-6 space-y-4 bg-gray-200 p-4 rounded-lg">
           <h2 className="text-lg font-semibold text-gray-900">Page banner</h2>
             <div>
               <label className="block text-sm font-medium mb-2 text-gray-700">
@@ -278,36 +232,15 @@ export default function PageEditor({ page, homePageId = null }: PageEditorProps)
               </p>
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2 text-gray-700">
-                Top banner (background image)
-              </label>
-            <div className="flex items-center gap-2 flex-wrap">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleBannerBackgroundUpload}
-                disabled={uploadingBannerBg}
-                className="text-sm text-gray-600"
-              />
-              <input
-                type="url"
+              <ImagePicker
                 value={formData.bannerBackgroundImage}
-                onChange={(e) =>
-                  setFormData({ ...formData, bannerBackgroundImage: e.target.value })
+                onChange={(url) =>
+                  setFormData({ ...formData, bannerBackgroundImage: url })
                 }
-                placeholder="Or paste image URL"
-                className="flex-1 min-w-[200px] px-4 py-2 border border-gray-300 rounded-lg text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                label="Top banner (background image)"
+                prefix="page-banner"
               />
             </div>
-            {uploadingBannerBg && (
-              <p className="text-xs text-gray-500 mt-1">Uploading…</p>
-            )}
-            {formData.bannerBackgroundImage && (
-              <p className="text-xs text-gray-500 mt-1 truncate max-w-full">
-                Current: {formData.bannerBackgroundImage}
-              </p>
-            )}
-          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2 text-gray-700">
@@ -425,38 +358,14 @@ export default function PageEditor({ page, homePageId = null }: PageEditorProps)
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2 text-gray-700">
-              Image on the banner (circular)
-            </label>
-            <div className="flex items-center gap-2 flex-wrap">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleBannerImageUpload}
-                disabled={uploadingBannerImage}
-                className="text-sm text-gray-600"
-              />
-              <input
-                type="url"
-                value={formData.bannerImage}
-                onChange={(e) =>
-                  setFormData({ ...formData, bannerImage: e.target.value })
-                }
-                placeholder="Or paste image URL"
-                className="flex-1 min-w-[200px] px-4 py-2 border border-gray-300 rounded-lg text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-            {uploadingBannerImage && (
-              <p className="text-xs text-gray-500 mt-1">Uploading…</p>
-            )}
-            {uploadError && (
-              <p className="text-xs text-red-600 mt-1">{uploadError}</p>
-            )}
-            {formData.bannerImage && (
-              <p className="text-xs text-gray-500 mt-1 truncate max-w-full">
-                Current: {formData.bannerImage}
-              </p>
-            )}
+            <ImagePicker
+              value={formData.bannerImage}
+              onChange={(url) =>
+                setFormData({ ...formData, bannerImage: url })
+              }
+              label="Image on the banner (circular)"
+              prefix="page-banner-image"
+            />
           </div>
         </div>
 
@@ -515,6 +424,12 @@ export default function PageEditor({ page, homePageId = null }: PageEditorProps)
                 className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
               >
                 Add Heading + Paragraph
+              </button>
+              <button
+                onClick={() => addSection("cards")}
+                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+              >
+                Add Cards
               </button>
             </div>
           </div>

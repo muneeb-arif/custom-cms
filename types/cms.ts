@@ -33,26 +33,48 @@ export interface SectionData {
   updatedAt: Date
 }
 
-export type SectionType = 
-  | 'textImage' 
-  | 'imageSlider' 
-  | 'headingParagraph'
+export type SectionType =
+  | "textImage"
+  | "imageSlider"
+  | "headingParagraph"
+  | "cards"
   | string // Allow for future dynamic types
+
+export interface CardServiceItem {
+  title: string
+  description: string
+}
+
+export interface CardItem {
+  image?: string
+  heading: string
+  description?: string
+  overview?: string
+  services?: CardServiceItem[]
+  liveDemoUrl?: string
+  sourceCodeUrl?: string
+}
 
 export interface SectionContent {
   // TextImage section
   text?: string
   image?: string
-  alignment?: 'left' | 'right'
-  
+  alignment?: "left" | "right"
+
   // ImageSlider section
   images?: string[]
   autoplay?: boolean
-  
+
   // HeadingParagraph section
   heading?: string
   paragraphs?: string[]
-  
+
+  // Cards section
+  title?: string
+  subText?: string
+  cardsPerRow?: number
+  cards?: CardItem[]
+
   // Generic for future types
   [key: string]: any
 }

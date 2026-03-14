@@ -30,7 +30,7 @@ export default function ImageSliderSection({
 
   return (
     <section className="py-12">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto">
         <div className="relative w-full h-96 md:h-[500px] rounded-lg overflow-hidden">
           {images.map((image, index) => (
             <div

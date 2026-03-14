@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
-import { getBlobToken, BLOB_NOT_CONFIGURED_MESSAGE } from "@/lib/blob"
-import { put } from "@vercel/blob"
+import { getStorageService } from "@/lib/storage"
+import { BLOB_NOT_CONFIGURED_MESSAGE } from "@/lib/blob"
 
-const MAX_FILE_BYTES = 4 * 1024 * 1024 // 4 MB (under Vercel server 4.5 MB limit)
+const MAX_FILE_BYTES = 4 * 1024 * 1024 // 4 MB
 const ALLOWED_TYPES = [
   "image/jpeg",
   "image/png",
@@ -13,21 +13,13 @@ const ALLOWED_TYPES = [
 ]
 
 /**
- * Reusable upload API for Vercel Blob.
- * Use with prefix=header for logo, prefix=banners, prefix=sections, etc. for future assets.
+ * Legacy upload API - thin wrapper around storage service.
+ * Prefer POST /api/media for new code.
  */
 export async function POST(request: NextRequest) {
   const session = await auth()
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  }
-
-  const token = getBlobToken()
-  if (!token) {
-    return NextResponse.json(
-      { error: BLOB_NOT_CONFIGURED_MESSAGE },
-      { status: 503 }
-    )
   }
 
   let formData: FormData
@@ -66,18 +58,17 @@ export async function POST(request: NextRequest) {
   const prefix =
     (formData.get("prefix") as string)?.trim().replace(/[^a-z0-9-_]/gi, "") ||
     "uploads"
-  const baseName = file.name.replace(/\.[^.]+$/, "").replace(/[^a-zA-Z0-9-_]/g, "-").slice(0, 80)
-  const ext = file.name.includes(".") ? file.name.split(".").pop()?.slice(0, 10) || "bin" : "bin"
-  const pathname = `${prefix}/${baseName}-${Date.now()}.${ext}`
 
   try {
-    const blob = await put(pathname, file, {
-      access: "public",
-      addRandomSuffix: true,
-    })
-    return NextResponse.json({ url: blob.url })
+    const storage = getStorageService()
+    const { url } = await storage.upload(file, prefix)
+    return NextResponse.json({ url })
   } catch (err) {
-    console.error("Blob upload failed:", err)
+    const message = err instanceof Error ? err.message : "Unknown error"
+    if (message === BLOB_NOT_CONFIGURED_MESSAGE) {
+      return NextResponse.json({ error: message }, { status: 503 })
+    }
+    console.error("Upload failed:", err)
     return NextResponse.json(
       { error: "Upload failed. Please try again." },
       { status: 500 }

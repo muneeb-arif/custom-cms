@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { ServiceData } from "@/types/cms"
+import ImagePicker from "./ImagePicker"
 
 interface ServiceEditorProps {
   service?: ServiceData
@@ -106,15 +107,13 @@ export default function ServiceEditor({ service }: ServiceEditorProps) {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-2 text-gray-700">Image URL</label>
-          <input
-            type="text"
+          <ImagePicker
             value={formData.image}
-            onChange={(e) =>
-              setFormData({ ...formData, image: e.target.value })
+            onChange={(url) =>
+              setFormData({ ...formData, image: url })
             }
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="https://example.com/image.jpg"
+            label="Image"
+            prefix="media"
           />
         </div>
         <div>

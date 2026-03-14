@@ -12,12 +12,12 @@ export default function TextImageSection({ content }: TextImageSectionProps) {
   const { text = "", image, alignment = "left" } = content
 
   return (
-    <section className="py-12">
+    <section className="">
       <div className="container mx-auto px-4">
         <div
           className={`flex flex-col ${
             alignment === "right" ? "md:flex-row-reverse" : "md:flex-row"
-          } gap-8 items-center`}
+          } gap-8 items-start`}
         >
           <div className="flex-1">
             {image && (

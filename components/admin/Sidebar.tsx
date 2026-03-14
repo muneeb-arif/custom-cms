@@ -10,6 +10,7 @@ const navItems = [
   { href: "/admin/pages", label: "Pages", icon: "📄" },
   { href: "/admin/services", label: "Services", icon: "🛠️" },
   { href: "/admin/sections", label: "Sections", icon: "🧩" },
+  { href: "/admin/media", label: "Media", icon: "🖼️" },
   { href: "/admin/settings", label: "Settings", icon: "⚙️" },
 ]
 
