@@ -51,7 +51,7 @@ export default function ImageSliderSection({
             <>
               <button
                 onClick={prevSlide}
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition"
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-brand-primary text-white p-2 rounded-full hover:bg-brand-hover transition"
                 aria-label="Previous slide"
               >
                 <svg
@@ -70,7 +70,7 @@ export default function ImageSliderSection({
               </button>
               <button
                 onClick={nextSlide}
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition"
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-brand-primary text-white p-2 rounded-full hover:bg-brand-hover transition"
                 aria-label="Next slide"
               >
                 <svg

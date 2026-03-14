@@ -30,6 +30,18 @@ select {
   color: #000 !important;
 }
 
+/* Front website theme - headers, buttons, links */
+.public-site h1,
+.public-site h2,
+.public-site h3,
+.public-site h4 {
+  color: #202794;
+}
+
+.text-white {
+  color : rgb(255 255 255 / var(--tw-text-opacity, 1)) !important;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

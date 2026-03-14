@@ -63,23 +63,23 @@ export default function PageBanner({
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
           {hasOverlayContent && (
             <div
-              className="rounded-2xl p-8 md:p-10 max-w-xl w-full backdrop-blur-sm"
+              className="rounded-2xl p-12 md:p-14 max-w-[54rem] w-full backdrop-blur-sm"
               style={overlayStyle}
             >
               {bannerTitle && (
-                <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-sm">
+                <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 py-4 drop-shadow-sm">
                   {bannerTitle}
                 </h1>
               )}
               {bannerText && (
-                <p className="text-lg md:text-xl text-white mb-6 drop-shadow-sm">
+                <p className="text-lg md:text-xl text-white mb-6 drop-shadow-sm py-4">
                   {bannerText}
                 </p>
               )}
               {bannerButtonVisible && bannerButtonText && (
                 <Link
                   href={bannerButtonLink || "#"}
-                  className="inline-block px-6 py-3 rounded-xl bg-gray-200 text-gray-800 font-medium hover:bg-gray-300 transition-colors"
+                  className="inline-block px-6 py-3 rounded-xl bg-brand-primary text-white font-medium hover:bg-brand-hover transition-colors"
                 >
                   {bannerButtonText}
                 </Link>
@@ -88,7 +88,7 @@ export default function PageBanner({
           )}
           {bannerImage && (
             <div className="flex-shrink-0">
-              <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-white/50 shadow-xl">
+              <div className="relative w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden border-4 border-white/50 shadow-xl">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={bannerImage}

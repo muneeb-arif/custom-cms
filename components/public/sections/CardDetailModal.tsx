@@ -62,17 +62,17 @@ export default function CardDetailModal({
               <button
                 type="button"
                 onClick={() => onNavigate!(currentIndex - 1)}
-                className="text-gray-600 hover:text-gray-900"
+                className="text-brand-primary hover:text-brand-hover transition-colors"
               >
                 &larr; Previous
               </button>
             )}
-            <h2 className="text-3xl font-bold text-gray-900">{card.heading}</h2>
+            <h2 className="text-3xl font-bold text-brand-header">{card.heading}</h2>
             {hasNext && (
               <button
                 type="button"
                 onClick={() => onNavigate!(currentIndex + 1)}
-                className="text-gray-600 hover:text-gray-900"
+                className="text-brand-primary hover:text-brand-hover transition-colors"
               >
                 Next &rarr;
               </button>
@@ -81,7 +81,7 @@ export default function CardDetailModal({
           <button
             type="button"
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-2xl"
+            className="text-brand-primary hover:text-brand-hover text-2xl transition-colors"
             aria-label="Close modal"
           >
             &times;
@@ -105,13 +105,13 @@ export default function CardDetailModal({
           )}
           {services.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
+              <h3 className="text-lg font-semibold text-brand-header mb-3">
                 Services
               </h3>
               <div className="space-y-3">
                 {services.map((svc, i) => (
                   <div key={i} className="border-l-2 border-amber-200 pl-3 py-1">
-                    <h4 className="font-medium text-gray-900">{svc.title}</h4>
+                    <h4 className="font-medium text-brand-header">{svc.title}</h4>
                     {svc.description && (
                       <p className="text-sm text-gray-600 mt-0.5">
                         {svc.description}
@@ -128,7 +128,7 @@ export default function CardDetailModal({
                 href={card.liveDemoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block px-4 py-2 rounded-lg bg-amber-700 text-white font-medium hover:bg-amber-800 transition"
+                className="inline-block px-4 py-2 rounded-lg bg-brand-primary text-white font-medium hover:bg-brand-hover transition"
               >
                 View Live Demo
               </a>
@@ -138,7 +138,7 @@ export default function CardDetailModal({
                 href={card.sourceCodeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block px-4 py-2 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition"
+                className="inline-block px-4 py-2 rounded-lg bg-brand-primary text-white font-medium hover:bg-brand-hover transition"
               >
                 View Source Code
               </a>

@@ -21,7 +21,7 @@ export default function ServiceCard({ service, onCardClick }: ServiceCardProps) 
         </div>
       )}
       <div className="p-6">
-        <h3 className="text-2xl font-semibold mb-2">{service.title}</h3>
+        <h3 className="text-2xl font-semibold text-brand-header mb-2">{service.title}</h3>
         {service.shortDescription && (
           <p className="text-gray-600 mb-4 line-clamp-3">
             {service.shortDescription}
@@ -30,14 +30,14 @@ export default function ServiceCard({ service, onCardClick }: ServiceCardProps) 
         <div className="flex gap-2">
           <Link
             href={`/services/${service.slug}`}
-            className="text-blue-600 hover:text-blue-800 font-medium"
+            className="text-brand-primary hover:text-brand-hover font-medium transition-colors"
           >
             View Details →
           </Link>
           {onCardClick && (
             <button
               onClick={() => onCardClick(service)}
-              className="text-blue-600 hover:text-blue-800 font-medium"
+              className="text-brand-primary hover:text-brand-hover font-medium transition-colors"
             >
               Quick View
             </button>

@@ -15,7 +15,7 @@ export default function HeadingParagraphSection({
       <div className="container mx-auto px-4">
         <div className="text-center mb-10 mx-auto">
           {heading && (
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">{heading}</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-brand-header mb-6">{heading}</h2>
           )}
           <div className="space-y-4">
             {paragraphs.map((paragraph, index) => (

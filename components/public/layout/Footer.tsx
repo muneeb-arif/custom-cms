@@ -117,14 +117,14 @@ export default function Footer({
     footerSubscribeVisible
 
   return (
-    <footer className="border-t bg-gray-50 mt-auto">
-      <div className="container mx-auto px-4 py-8">
+    <footer className="border-t bg-brand-primary mt-auto">
+      <div className="container mx-auto px-4 py-10">
         {hasAnySection && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             {footerAboutVisible && (
               <div>
-                <h3 className="font-semibold text-gray-900 mb-3">About us</h3>
-                <p className="text-gray-600 text-sm whitespace-pre-line">
+                <h3 className="font-semibold text-white mb-5">About us</h3>
+                <p className="text-white/90 text-sm whitespace-pre-line">
                   {footerAboutText?.trim() ||
                     "Your trusted partner for quality content and services."}
                 </p>
@@ -132,13 +132,13 @@ export default function Footer({
             )}
             {footerMenuVisible && (
               <div>
-                <h3 className="font-semibold text-gray-900 mb-3">Our menu</h3>
+                <h3 className="font-semibold text-white mb-5">Our menu</h3>
                 <ul className="space-y-2">
                   {menuPages.map((page) => (
                     <li key={page.id}>
                       <Link
                         href={page.isHome ? "/" : `/${page.slug}`}
-                        className="text-gray-600 hover:text-gray-900 text-sm"
+                        className="text-white/90 hover:text-brand-hover text-sm transition-colors"
                       >
                         {page.title}
                       </Link>
@@ -148,7 +148,7 @@ export default function Footer({
                     <li>
                       <Link
                         href="/services"
-                        className="text-gray-600 hover:text-gray-900 text-sm"
+                        className="text-white/90 hover:text-brand-hover text-sm transition-colors"
                       >
                         Services
                       </Link>
@@ -159,7 +159,7 @@ export default function Footer({
             )}
             {footerSocialVisible && (
               <div>
-                <h3 className="font-semibold text-gray-900 mb-3">
+                <h3 className="font-semibold text-white mb-5">
                   Social media
                 </h3>
                 <ul className="space-y-2 text-sm">
@@ -169,7 +169,7 @@ export default function Footer({
                         href={footerSocialJson.fb.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+                        className="flex items-center gap-2 text-white/90 hover:text-brand-hover transition-colors pb-2"
                       >
                         <IconFacebook className="h-5 w-5 shrink-0" />
                         <span>{footerSocialJson.fb.text || "Facebook"}</span>
@@ -182,7 +182,7 @@ export default function Footer({
                         href={footerSocialJson.insta.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+                        className="flex items-center gap-2 text-white/90 hover:text-brand-hover transition-colors pb-2"
                       >
                         <IconInstagram className="h-5 w-5 shrink-0" />
                         <span>{footerSocialJson.insta.text || "Instagram"}</span>
@@ -195,7 +195,7 @@ export default function Footer({
                         href={footerSocialJson.twitter.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+                        className="flex items-center gap-2 text-white/90 hover:text-brand-hover transition-colors pb-2"
                       >
                         <IconTwitter className="h-5 w-5 shrink-0" />
                         <span>{footerSocialJson.twitter.text || "Twitter"}</span>
@@ -208,7 +208,7 @@ export default function Footer({
                         href={footerSocialJson.linkedin.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+                        className="flex items-center gap-2 text-white/90 hover:text-brand-hover transition-colors pb-2"
                       >
                         <IconLinkedIn className="h-5 w-5 shrink-0" />
                         <span>{footerSocialJson.linkedin.text || "LinkedIn"}</span>
@@ -221,7 +221,7 @@ export default function Footer({
                         href={footerSocialJson.website.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+                        className="flex items-center gap-2 text-white/90 hover:text-brand-hover transition-colors pb-2"
                       >
                         <IconGlobe className="h-5 w-5 shrink-0" />
                         <span>{footerSocialJson.website.text || "Website"}</span>
@@ -234,19 +234,19 @@ export default function Footer({
                       !footerSocialJson.twitter?.url &&
                       !footerSocialJson.linkedin?.url &&
                       !footerSocialJson.website?.url)) && (
-                    <li className="text-gray-500">No links added yet.</li>
+                    <li className="text-white/70">No links added yet.</li>
                   )}
                 </ul>
               </div>
             )}
             {footerSubscribeVisible && (
               <div>
-                <h3 className="font-semibold text-gray-900 mb-3">
+                <h3 className="font-semibold text-white mb-5">
                   Contact info
                 </h3>
-                <ul className="space-y-2 text-sm text-gray-600">
+                <ul className="space-y-2 text-sm text-white/90">
                   {footerContactJson?.name && (
-                    <li className="flex items-center gap-2 text-gray-900 font-medium">
+                    <li className="flex items-center gap-2 text-white font-medium pb-2">
                       <IconUser className="h-5 w-5 shrink-0" />
                       <span>{footerContactJson.name}</span>
                     </li>
@@ -255,7 +255,7 @@ export default function Footer({
                     <li>
                       <a
                         href={`mailto:${footerContactJson.email}`}
-                        className="flex items-center gap-2 hover:text-gray-900"
+                        className="flex items-center gap-2 hover:text-brand-hover transition-colors pb-2"
                       >
                         <IconEnvelope className="h-5 w-5 shrink-0" />
                         <span>{footerContactJson.email}</span>
@@ -266,7 +266,7 @@ export default function Footer({
                     <li>
                       <a
                         href={`tel:${footerContactJson.phone1.replace(/\s/g, "")}`}
-                        className="flex items-center gap-2 hover:text-gray-900"
+                        className="flex items-center gap-2 hover:text-brand-hover transition-colors pb-2"
                       >
                         <IconPhone className="h-5 w-5 shrink-0" />
                         <span>{footerContactJson.phone1}</span>
@@ -277,7 +277,7 @@ export default function Footer({
                     <li>
                       <a
                         href={`tel:${footerContactJson.phone2.replace(/\s/g, "")}`}
-                        className="flex items-center gap-2 hover:text-gray-900"
+                        className="flex items-center gap-2 hover:text-brand-hover transition-colors pb-2"
                       >
                         <IconPhone className="h-5 w-5 shrink-0" />
                         <span>{footerContactJson.phone2}</span>
@@ -290,7 +290,7 @@ export default function Footer({
                         href={googleMapsUrl(footerContactJson.address)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 hover:text-gray-900"
+                        className="flex items-center gap-2 hover:text-brand-hover transition-colors pb-2"
                       >
                         <IconMapPin className="h-5 w-5 shrink-0" />
                         <span>{footerContactJson.address}</span>
@@ -303,14 +303,14 @@ export default function Footer({
                       !footerContactJson.phone1 &&
                       !footerContactJson.phone2 &&
                       !footerContactJson.address)) && (
-                    <li className="text-gray-500">No contact info added yet.</li>
+                    <li className="text-white/70">No contact info added yet.</li>
                   )}
                 </ul>
               </div>
             )}
           </div>
         )}
-        <div className="text-center text-gray-600 border-t pt-6">
+        <div className="text-center text-white/90 border-white/20 border-t py-6">
           <p>&copy; {new Date().getFullYear()} InforMityx. All rights reserved.</p>
         </div>
       </div>

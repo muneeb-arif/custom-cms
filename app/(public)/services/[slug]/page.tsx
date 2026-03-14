@@ -45,7 +45,7 @@ export default async function ServiceDetailPage({
   return (
     <div className="container mx-auto px-4 py-16">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-6">{service.title}</h1>
+        <h1 className="text-4xl font-bold mb-6 text-brand-header">{service.title}</h1>
         {service.image && (
           <div className="relative w-full h-96 mb-8 rounded-lg overflow-hidden">
             <Image

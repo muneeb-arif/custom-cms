@@ -89,7 +89,7 @@ export default async function HomePage() {
   return (
     <div className="container mx-auto px-4 py-24">
       <div className="text-center max-w-lg mx-auto">
-        <h1 className="text-4xl font-bold mb-4 text-gray-900">
+        <h1 className="text-4xl font-bold mb-4 text-brand-header">
           Nothing is created
         </h1>
         <p className="text-lg text-gray-600 mb-8">
@@ -98,7 +98,7 @@ export default async function HomePage() {
         </p>
         <Link
           href="/admin"
-          className="inline-block px-6 py-3 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 transition-colors"
+          className="inline-block px-6 py-3 bg-brand-primary text-white font-medium rounded-lg hover:bg-brand-hover transition-colors"
         >
           Let&apos;s start building
         </Link>

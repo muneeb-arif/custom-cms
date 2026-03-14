@@ -40,7 +40,7 @@ export default function CardsSection({ content }: CardsSectionProps) {
           {(title || subText) && (
             <div className="text-center mb-10">
               {title && (
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                <h2 className="text-3xl md:text-4xl font-bold text-brand-header mb-4">
                   {title}
                 </h2>
               )}
@@ -80,7 +80,7 @@ export default function CardsSection({ content }: CardsSectionProps) {
                     <button
                       type="button"
                       onClick={() => setSelectedCardIndex(index)}
-                      className="mt-auto w-full py-2 px-4 rounded-lg border border-gray-300 bg-white text-gray-800 font-medium hover:bg-gray-50 transition text-sm"
+                      className="mt-auto w-full py-2 px-4 rounded-lg bg-brand-primary text-white font-medium hover:bg-brand-hover transition text-sm"
                     >
                       View Details
                     </button>
