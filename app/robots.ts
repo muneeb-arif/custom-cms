@@ -1,7 +1,8 @@
 import { MetadataRoute } from "next"
+import { getBaseUrl } from "@/lib/seo"
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:9000"
+  const baseUrl = getBaseUrl()
 
   return {
     rules: {

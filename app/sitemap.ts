@@ -1,9 +1,10 @@
 import { MetadataRoute } from "next"
 import { prisma } from "@/lib/db/prisma"
 import { getOrCreateSettings } from "@/lib/db/settings"
+import { getBaseUrl } from "@/lib/seo"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:9000"
+  const baseUrl = getBaseUrl()
 
   const RESERVED_FIRST_SEGMENTS = [
     "services",
